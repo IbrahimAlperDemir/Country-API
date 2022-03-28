@@ -9,7 +9,7 @@ import UIKit
 
 class HomeController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var countryList:[Country] = []
+    var countryList: [CountryCell.ViewModel] = []
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return countryList.count
@@ -19,9 +19,17 @@ class HomeController: UIViewController, UITableViewDataSource, UITableViewDelega
         if countryList.isEmpty {
             return UITableViewCell()
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell", for: indexPath) as! CountryCell
-        
-        cell.configure(with: countryList[indexPath.row])
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: "CountryCell",
+            for: indexPath
+        ) as! CountryCell
+        let countryViewModel = countryList[indexPath.row]
+        countryViewModel.onFavoriteTapped = { [weak self] liked in
+            // TODO: - Data katmanına liked bilgisini haber verelim
+            countryViewModel.isLiked = !liked
+            cell.configure(with: countryViewModel)
+        }
+        cell.configure(with: countryViewModel)
         return cell
     }
     
@@ -57,9 +65,9 @@ class HomeController: UIViewController, UITableViewDataSource, UITableViewDelega
             if (error != nil) {
                 print(error)
             } else {
-                let httpResponse = response as? HTTPURLResponse
                 let apiResponse = try? JSONDecoder().decode(CountryListResponse.self, from: data!)
-                self.countryList = apiResponse?.data ?? []
+                self.countryList = apiResponse?.data?.map { $0.toViewModel() } ?? []
+                // TODO: - Data katmanından isLiked bilgisini alalım filtreleyelim
                 DispatchQueue.main.async {
                     self.tableview.reloadData()
                 }

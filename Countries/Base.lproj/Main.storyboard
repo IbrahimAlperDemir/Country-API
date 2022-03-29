@@ -94,6 +94,9 @@
                                 <rect key="frame" x="12" y="385" width="390" height="31"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="For More Information"/>
+                                <connections>
+                                    <action selector="moreInfoButton:" destination="tM5-Ck-1QR" eventType="touchUpInside" id="C4R-hQ-n3j"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ekH-qh-epz"/>

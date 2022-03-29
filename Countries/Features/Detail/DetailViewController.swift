@@ -34,6 +34,13 @@ class DetailController: UIViewController {
         getAllCountryDetails(wikiDataId: wikiDataId ?? "")
     }
     
+    @IBAction func moreInfoButton(_ sender: UIButton) {
+        guard let wikiId = wikiDataId else { return }
+        
+        UIApplication.shared.open(URL(string: "https://www.wikidata.org/\(wikiId)")!,  options: [:], completionHandler: nil)
+    }
+    
+    
     func populate(with countryDetail: CountryDetail?) {
         CountryLabel.text = countryDetail?.code
     }

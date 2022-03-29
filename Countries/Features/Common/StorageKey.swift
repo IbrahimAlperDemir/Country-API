@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+enum StorageKey: String {
+  case likedCountries
+}

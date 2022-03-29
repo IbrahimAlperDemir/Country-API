@@ -62,10 +62,61 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="DW6-6h-xMQ"/>
+                    <connections>
+                        <outlet property="tableview" destination="mUR-ht-fNM" id="TNa-3j-Gnz"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Net-iQ-Kee" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="928.98550724637687" y="772.76785714285711"/>
+        </scene>
+        <!--Detail Controller-->
+        <scene sceneID="Vzp-aJ-blg">
+            <objects>
+                <viewController storyboardIdentifier="DetailController" id="tM5-Ck-1QR" customClass="DetailController" customModule="Countries" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1w1-UM-iIP">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JCr-uZ-xBE">
+                                <rect key="frame" x="0.0" y="60" width="414" height="258"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="258" id="cRN-1P-9c1"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coıntry Code:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zlf-kj-Jjz">
+                                <rect key="frame" x="12" y="348" width="390" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0xY-69-ILb">
+                                <rect key="frame" x="12" y="385" width="390" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="For More Information"/>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ekH-qh-epz"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Zlf-kj-Jjz" firstAttribute="top" secondItem="JCr-uZ-xBE" secondAttribute="bottom" constant="30" id="CXD-GK-bxg"/>
+                            <constraint firstItem="ekH-qh-epz" firstAttribute="trailing" secondItem="Zlf-kj-Jjz" secondAttribute="trailing" constant="12" id="EZ3-NG-xKW"/>
+                            <constraint firstItem="JCr-uZ-xBE" firstAttribute="leading" secondItem="ekH-qh-epz" secondAttribute="leading" id="Shk-HZ-rf3"/>
+                            <constraint firstItem="ekH-qh-epz" firstAttribute="trailing" secondItem="JCr-uZ-xBE" secondAttribute="trailing" id="Z6o-I4-R0J"/>
+                            <constraint firstItem="0xY-69-ILb" firstAttribute="top" secondItem="Zlf-kj-Jjz" secondAttribute="bottom" constant="16" id="aBY-cz-W3B"/>
+                            <constraint firstItem="JCr-uZ-xBE" firstAttribute="top" secondItem="ekH-qh-epz" secondAttribute="top" constant="16" id="afp-bz-se3"/>
+                            <constraint firstItem="0xY-69-ILb" firstAttribute="leading" secondItem="ekH-qh-epz" secondAttribute="leading" constant="12" id="bB6-pr-NsI"/>
+                            <constraint firstItem="Zlf-kj-Jjz" firstAttribute="leading" secondItem="ekH-qh-epz" secondAttribute="leading" constant="12" id="jiW-uc-rSw"/>
+                            <constraint firstItem="ekH-qh-epz" firstAttribute="trailing" secondItem="0xY-69-ILb" secondAttribute="trailing" constant="12" id="xr1-55-qOv"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="CountryLabel" destination="Zlf-kj-Jjz" id="xhz-KI-5pJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YqZ-9x-0IW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1895.6521739130437" y="772.76785714285711"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="gj6-Ei-gov">

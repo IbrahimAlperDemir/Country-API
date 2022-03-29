@@ -44,3 +44,18 @@ class CountryCell: UITableViewCell {
         viewModel.onFavoriteTapped?(viewModel.isLiked)
     }
 }
+
+// MARK: - NetworkingConversion
+
+extension CountryCell.ViewModel {
+    
+    func asCountry() -> Country {
+        Country(
+            code: nil,
+            currencyCodes: nil,
+            name: name,
+            wikiDataId: wikiDataId
+        )
+    }
+    
+}

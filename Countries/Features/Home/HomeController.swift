@@ -7,77 +7,87 @@
 
 import UIKit
 
-class HomeController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class HomeController: UIViewController {
     
-    var countryList: [CountryCell.ViewModel] = []
+    // MARK: - Variables
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return countryList.count
-    }
+    private var countryList: [CountryCell.ViewModel] = []
+    private var likedCountries: [Country] = []
+    private let dataSource = CountryListDataSource()
+    private let countryRepository = CountryRepository()
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if countryList.isEmpty {
-            return UITableViewCell()
-        }
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: "CountryCell",
-            for: indexPath
-        ) as! CountryCell
-        let countryViewModel = countryList[indexPath.row]
-        countryViewModel.onFavoriteTapped = { [weak self] liked in
-            // TODO: - Data katmanına liked bilgisini haber verelim
-            countryViewModel.isLiked = !liked
-            cell.configure(with: countryViewModel)
-        }
-        cell.configure(with: countryViewModel)
-        return cell
-    }
+    // MARK: - Views
     
+    @IBOutlet private weak var tableview: UITableView!
     
-    @IBOutlet weak var tableview: UITableView!
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableview.register(UINib(nibName: "CountryCell", bundle: nil), forCellReuseIdentifier: "CountryCell")
-        tableview.delegate = self
-        tableview.dataSource = self
+        tableview.delegate = dataSource
+        tableview.dataSource = dataSource
         
         title = "Countries"
-        getCountry()
-
+        getCountries()
+        bindLikedHandler()
+        bindSelectionHandler()
     }
     
-    func getCountry() {
-        
-        let headers = [
-            "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
-            "X-RapidAPI-Key": "41206fc1famsh81365812bc793e4p1e5f08jsn518e24dfcd66"
-        ]
-
-        let request = NSMutableURLRequest(url: NSURL(string: "https://wft-geo-db.p.rapidapi.com/v1/geo/countries?limit=10")! as URL,
-                                                cachePolicy: .useProtocolCachePolicy,
-                                            timeoutInterval: 10.0)
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
-
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
-            if (error != nil) {
-                print(error)
-            } else {
-                let apiResponse = try? JSONDecoder().decode(CountryListResponse.self, from: data!)
-                self.countryList = apiResponse?.data?.map { $0.toViewModel() } ?? []
-                // TODO: - Data katmanından isLiked bilgisini alalım filtreleyelim
-                DispatchQueue.main.async {
-                    self.tableview.reloadData()
-                }
-                
-            
-            }
-        })
-
-        dataTask.resume()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupLikedCountries()
     }
-                              
-
+    
+    // MARK: - Methods
+    
+    func bindLikedHandler() {
+        dataSource.countryLikedHandler = { [weak self] countryViewModel in
+            let liked = countryViewModel.isLiked
+            if liked {
+                self?.countryRepository.addLikedCountry(
+                    country: countryViewModel.asCountry()
+                )
+            } else {
+                guard let wikiDataId = countryViewModel.wikiDataId else { return }
+                self?.countryRepository.dislikeCountry(with: wikiDataId)
+            }
+        }
+    }
+    
+    func bindSelectionHandler() {
+        dataSource.countrySelectionHandler = { [weak self] countryViewModel in
+            let wikiId = countryViewModel.wikiDataId
+            guard let detailViewController = self?.storyboard?.instantiateViewController(identifier: "DetailController", creator: { coder in
+                DetailController(wikiDataId: wikiId, coder: coder)
+            }) else { return }
+            self?.navigationController?.pushViewController(detailViewController, animated: true)
+        }
+    }
+    
+    func mapLikedCountries() {
+        likedCountries = countryRepository.getLikedCountries()
+        let likedWikiIds = likedCountries.map { $0.wikiDataId }
+        countryList.forEach { countryViewModel in
+            countryViewModel.isLiked = likedWikiIds.contains(countryViewModel.wikiDataId)
+        }
+    }
+    
+    func setupLikedCountries() {
+        mapLikedCountries()
+        dataSource.setCountryList(countryList)
+        DispatchQueue.main.async {
+            self.tableview.reloadData()
+        }
+    }
+    
+    func getCountries() {
+        countryRepository.getAllCountries { [weak self] countryList in
+            guard let self = self else { return }
+            self.countryList = countryList
+            self.setupLikedCountries()
+        }
+        
+    }
 }

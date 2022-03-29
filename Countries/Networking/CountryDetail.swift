@@ -6,3 +6,16 @@
 //
 
 import Foundation
+
+struct CountryDetailResponse: Codable {
+    var data: CountryDetail?
+}
+
+struct CountryDetail: Codable {
+    var code: String?
+    var flagImageUri: String?
+    var name: String?
+    var wikiDataId: String?
+}
+
+
